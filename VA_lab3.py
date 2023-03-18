@@ -1,12 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def read_table():
+    spisok = []
+
+    with open('znacheniya.csv', 'r') as file:
+        i = 0
+        print('ТАБЛИЦА ЗНАЧЕНИЙ (x и y)')
+        for line in file.readlines():
+            spisok.append([])
+            spisok[i].append(line[:line.find(';')])
+            print(spisok[i][0], end=' ')
+            line = line[line.find(';') + 1:]
+            spisok[i].append(line[:-1])
+            print(spisok[i][1])
+
+            i += 1
+        print()
+    return
+
 def variant1():
-    print(1)
+    read_table()
+    print('Введите значение x для точки: ', end='')
+    xzn = float(input())
+    return
 
 def variant2():
     print(2)
-
 
 while True:
     print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')

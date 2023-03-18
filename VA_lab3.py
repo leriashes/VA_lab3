@@ -3,26 +3,44 @@ import matplotlib.pyplot as plt
 
 def read_table():
     spisok = []
+    table = []
 
     with open('znacheniya.csv', 'r') as file:
         i = 0
         print('ТАБЛИЦА ЗНАЧЕНИЙ (x и y)')
         for line in file.readlines():
             spisok.append([])
+            table.append([])
             spisok[i].append(line[:line.find(';')])
-            print(spisok[i][0], end=' ')
             line = line[line.find(';') + 1:]
             spisok[i].append(line[:-1])
-            print(spisok[i][1])
 
+            for j in range(2):
+                table[i].append(float(spisok[i][j]))
+                j += 1
             i += 1
-        print()
-    return
+        
+
+    table.sort()
+
+    for strok in table:
+        print(strok[0], end='   ')
+        print(strok[1])
+
+    print()
+
+    return table
 
 def variant1():
-    read_table()
-    print('Введите значение x для точки: ', end='')
-    xzn = float(input())
+    table = read_table()
+
+    while(True):
+        print('Введите значение x для точки: ', end='')
+        xzn = float(input())
+
+        if xzn >= table[0][0] and xzn <= table[len(table) - 1][0]:
+            break
+
     return
 
 def variant2():

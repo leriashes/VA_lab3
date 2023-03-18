@@ -34,12 +34,27 @@ def read_table():
 def variant1():
     table = read_table()
 
+    n = len(table)
+    a = table[0][0]
+    b = table[n - 1][0]
+
     while(True):
         print('Введите значение x для точки: ', end='')
         xzn = float(input())
 
-        if xzn >= table[0][0] and xzn <= table[len(table) - 1][0]:
+        if xzn >= a and xzn <= b:
             break
+
+    result = 0
+
+    for i in range(n):
+        chisl = table[i][1]
+        znam = 1
+        for j in range(n):
+                if (i != j):
+                    chisl *= xzn - table[j][0]
+                    znam *= table[i][0] - table[j][0]
+        result += chisl / znam
 
     return
 

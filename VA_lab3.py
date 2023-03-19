@@ -104,9 +104,7 @@ def count_Lagrange(xs, coefs):
 
     return ys
 
-def variant1():
-    table = read_table()
-
+def variant1(table):
     n = len(table)
     a = table[0][0]
     b = table[n - 1][0]
@@ -118,8 +116,20 @@ def variant1():
         if xzn >= a and xzn <= b:
             break
 
+
+    
+
     result = 0
 
+    for i in range(n - 1):
+        if xzn >= table[i][0]:
+            if xzn <= table[i + 1][0]:
+                a = (table[i + 1][1] - table[i][1]) / (table[i + 1][0] - table[i][0])
+                result = a * xzn + table[i][1] - a * table[i][0]
+
+    print('\nРезультат: ', result)
+
+    result = 0
 
     count = 0
     for i in range(n):
@@ -160,7 +170,21 @@ while True:
     print('\n')
     if len(variant) == 1 and (variant[0] == '1' or variant[0] == '2'):
         if variant == '1':
-            coefs = variant1()
+            table = read_table()
+            coefs = variant1(table)
+
+            x = np.arange((4 * table[0][0] - table[len(table) -1][0]) / 5, (6 * table[len(table) - 1][0] + table[0][0]) / 5, 0.01)
+            plt.plot(x, count_Lagrange(x, coefs))
+
+            xt = []
+            yt = []
+
+            for i in range(len(table)):
+                xt.append(table[i][0])
+                yt.append(table[i][1])
+
+            plt.plot(xt, yt, 'bo')
+            plt.grid(True)
         else:
             variant2()
         break
@@ -168,26 +192,16 @@ while True:
     
 
 x = np.arange(-9, 74, 0.01)
-plt.figure(figsize=(10, 5))
+"""plt.figure(figsize=(10, 5))
 #plt.plot(x, np.sin(x), label=r'$f_1(x)=\sin(x)$')
 #plt.plot(x, np.cos(x), label=r'$f_2(x)=\cos(x)$')
 #plt.plot(x, -x, label=r'$f_3(x)=-x$')
 c = np.poly1d([-10, 10, 15])
-plt.plot(x, count_Lagrange(x, coefs))
 
-table = read_table()
-xt = []
-yt = []
-
-for i in range(len(table)):
-    xt.append(table[i][0])
-    yt.append(table[i][1])
-
-plt.plot(xt, yt, 'bo')
 
 plt.xlabel(r'$x$', fontsize=14)
 plt.ylabel(r'$f(x)$', fontsize=14)
 plt.grid(True)
 plt.legend(loc='best', fontsize=12)
-plt.savefig('figure_with_legend.png')
+plt.savefig('figure_with_legend.png')"""
 plt.show()

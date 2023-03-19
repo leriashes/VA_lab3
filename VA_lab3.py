@@ -31,36 +31,11 @@ def read_table():
 
     return table
 
-def variant1():
-    table = read_table()
+def Lagrange(table):
 
     n = len(table)
-    a = table[0][0]
-    b = table[n - 1][0]
-
-    while(True):
-        print('Введите значение x для точки: ', end='')
-        xzn = float(input())
-
-        if xzn >= a and xzn <= b:
-            break
-
-    result = 0
-
-    count = 0
-    for i in range(n):
-        chisl = table[i][1]
-        znam = 1
-        for j in range(n):
-            count += 1
-            if (i != j):
-                chisl *= xzn - table[j][0]
-                znam *= table[i][0] - table[j][0]
-        result += chisl / znam
-
-    print('\nРезультат: ', result, ' Количество итераций: ', count)
-
     coef_Lagrange = []
+
 
     for i in range(n):
         coef1 = []
@@ -99,6 +74,68 @@ def variant1():
             for j in range(len(coef)):
                 coef_Lagrange[j] += coef[j]
 
+    print('\nПолином Лагранжа: ', end='')
+
+    for i in range(n - 1):
+        print(coef_Lagrange[len(coef_Lagrange) - 1 - i], ' * (x^', n - i - 1, ') + ', end='', sep='')
+
+    print(coef_Lagrange[0])
+
+    return coef_Lagrange
+
+def Newton():
+    return
+
+def count_Lagrange(xs, coefs):
+
+    order = len(coefs)
+
+    ys = np.zeros(len(xs))
+
+    ys += coefs[order - 1]
+
+    for i in range(order - 1):
+        ys *= xs
+        ys += coefs[order - 2 - i]
+
+   # ys = np.zeros(len(xs))  # Initialise an array of zeros of the required length.
+   # for i in range(order):
+    #    ys += coefs[i] * xs ** i
+
+    return ys
+
+def variant1():
+    table = read_table()
+
+    n = len(table)
+    a = table[0][0]
+    b = table[n - 1][0]
+
+    while(True):
+        print('Введите значение x для точки: ', end='')
+        xzn = float(input())
+
+        if xzn >= a and xzn <= b:
+            break
+
+    result = 0
+
+
+    count = 0
+    for i in range(n):
+        chisl = table[i][1]
+        znam = 1
+        for j in range(n):
+            count += 1
+            if (i != j):
+                chisl *= xzn - table[j][0]
+                znam *= table[i][0] - table[j][0]
+        result += chisl / znam
+
+    print('\nРезультат: ', result, ' Количество итераций: ', count)
+
+    coef_Lagrange = Lagrange(table)
+
     result1 = coef_Lagrange[len(coef_Lagrange) - 1]
     count = 0
 
@@ -107,16 +144,9 @@ def variant1():
         result1 += coef_Lagrange[len(coef_Lagrange) - 2 - i]
         count += 1
 
-    print('Результат: ', result1, ' Количество итераций: ', count)
+    print('\nРезультат: ', result1, ' Количество итераций: ', count)
 
-    print('\nПолином Лагранжа: ', end='')
-
-    for i in range(n - 1):
-        print(coef_Lagrange[len(coef_Lagrange) - 1 - i], ' * (x^', n - i - 1, ') + ', end='', sep='')
-
-    print(coef_Lagrange[0])
-
-    return
+    return coef_Lagrange
 
 def variant2():
     print(2)
@@ -125,20 +155,26 @@ while True:
     print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')
     variant = input()
 
+    coefs = []
+
     print('\n')
     if len(variant) == 1 and (variant[0] == '1' or variant[0] == '2'):
         if variant == '1':
-            variant1()
+            coefs = variant1()
         else:
             variant2()
         break
 
+    
 
-x = np.arange(-10, 10.01, 0.01)
+x = np.arange(-9, 74, 0.01)
 plt.figure(figsize=(10, 5))
 plt.plot(x, np.sin(x), label=r'$f_1(x)=\sin(x)$')
 plt.plot(x, np.cos(x), label=r'$f_2(x)=\cos(x)$')
 plt.plot(x, -x, label=r'$f_3(x)=-x$')
+c = np.poly1d([-10, 10, 15])
+plt.plot(x, count_Lagrange(x, coefs))
+
 plt.xlabel(r'$x$', fontsize=14)
 plt.ylabel(r'$f(x)$', fontsize=14)
 plt.grid(True)

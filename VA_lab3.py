@@ -56,6 +56,47 @@ def variant1():
                     znam *= table[i][0] - table[j][0]
         result += chisl / znam
 
+    print('Результат: ', result)
+
+    coef_Lagrange = []
+
+    for i in range(n):
+        coef1 = []
+        coef = []
+
+        znam = 1
+
+        if i == 0:
+            coef.append(table[1][0] * (-1))
+        else:
+            coef.append(table[0][0] * (-1))
+
+        coef.append(1)
+
+        for k in range(n):
+            if k != i and k != abs(bool(i) - 1):
+
+                coef1 = coef.copy()
+
+                coef.insert(0, 0)
+
+                for j in range(len(coef1)):
+                    coef[j] += coef1[j] * table[k][0] * (-1)
+
+            if k != i:
+                znam *= (table[i][0] - table[k][0])
+
+        for j in range(len(coef)):
+            coef[j] /= znam
+            coef[j] *= table[i][1]
+
+        if i == 0:
+            for j in range(len(coef)):
+                coef_Lagrange.append(coef[j])
+        else:
+            for j in range(len(coef)):
+                coef_Lagrange[j] += coef[j]
+
     return
 
 def variant2():

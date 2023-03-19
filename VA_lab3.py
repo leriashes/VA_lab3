@@ -47,16 +47,18 @@ def variant1():
 
     result = 0
 
+    count = 0
     for i in range(n):
         chisl = table[i][1]
         znam = 1
         for j in range(n):
-                if (i != j):
-                    chisl *= xzn - table[j][0]
-                    znam *= table[i][0] - table[j][0]
+            count += 1
+            if (i != j):
+                chisl *= xzn - table[j][0]
+                znam *= table[i][0] - table[j][0]
         result += chisl / znam
 
-    print('Результат: ', result)
+    print('\nРезультат: ', result, ' Количество итераций: ', count)
 
     coef_Lagrange = []
 
@@ -96,6 +98,23 @@ def variant1():
         else:
             for j in range(len(coef)):
                 coef_Lagrange[j] += coef[j]
+
+    result1 = coef_Lagrange[len(coef_Lagrange) - 1]
+    count = 0
+
+    for i in range(n - 1):
+        result1 *= xzn
+        result1 += coef_Lagrange[len(coef_Lagrange) - 2 - i]
+        count += 1
+
+    print('Результат: ', result1, ' Количество итераций: ', count)
+
+    print('\nПолином Лагранжа: ', end='')
+
+    for i in range(n - 1):
+        print(coef_Lagrange[len(coef_Lagrange) - 1 - i], ' * (x^', n - i - 1, ') + ', end='', sep='')
+
+    print(coef_Lagrange[0])
 
     return
 

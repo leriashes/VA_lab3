@@ -169,11 +169,21 @@ while True:
 
 x = np.arange(-9, 74, 0.01)
 plt.figure(figsize=(10, 5))
-plt.plot(x, np.sin(x), label=r'$f_1(x)=\sin(x)$')
-plt.plot(x, np.cos(x), label=r'$f_2(x)=\cos(x)$')
-plt.plot(x, -x, label=r'$f_3(x)=-x$')
+#plt.plot(x, np.sin(x), label=r'$f_1(x)=\sin(x)$')
+#plt.plot(x, np.cos(x), label=r'$f_2(x)=\cos(x)$')
+#plt.plot(x, -x, label=r'$f_3(x)=-x$')
 c = np.poly1d([-10, 10, 15])
 plt.plot(x, count_Lagrange(x, coefs))
+
+table = read_table()
+xt = []
+yt = []
+
+for i in range(len(table)):
+    xt.append(table[i][0])
+    yt.append(table[i][1])
+
+plt.plot(xt, yt, 'bo')
 
 plt.xlabel(r'$x$', fontsize=14)
 plt.ylabel(r'$f(x)$', fontsize=14)

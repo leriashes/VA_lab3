@@ -119,7 +119,6 @@ def Newton(table, f):
     return
 
 def count_Lagrange(xs, coefs):
-
     order = len(coefs)
 
     ys = np.zeros(len(xs))
@@ -134,7 +133,34 @@ def count_Lagrange(xs, coefs):
    # for i in range(order):
     #    ys += coefs[i] * xs ** i
 
-   return ys
+    return ys
+
+def count_Newton(xs, f, table):
+
+    ys = np.zeros(len(xs))
+    ys += f[0][0]
+
+    n = len(table)
+
+    s = []
+
+    for i in range(n - 1):
+        s.append([])
+        for j in range(len(ys)):
+            s[i].append(f[i + 1][0])
+   
+    r = np.zeros(len(xs))
+
+    for i in range(n - 1):
+        r = xs - table[i]
+
+        for j in range(n - 2, -1 + i, -1):
+            s[j] *= r
+
+    for i in range(n - 1):
+        ys += s[i]
+
+    return ys
 
 def variant1():
     table = read_table()
@@ -209,16 +235,16 @@ def variant1():
 
     print('\n\nРезультат (полином Ньютона): ', result)
 
-
-    x = np.arange((4 * table[0][0] - table[len(table) -1][0]) / 5, (6 * table[len(table) - 1][0] + table[0][0]) / 5, 0.01)
-    plt.plot(x, count_Lagrange(x, coef_Lagrange))
-
     xt = []
     yt = []
 
     for i in range(len(table)):
         xt.append(table[i][0])
         yt.append(table[i][1])
+
+    x = np.arange((4 * table[0][0] - table[len(table) -1][0]) / 5, (6 * table[len(table) - 1][0] + table[0][0]) / 5, 0.01)
+    plt.plot(x, count_Lagrange(x, coef_Lagrange))
+    plt.plot(x, count_Newton(x, f, xt))
 
     plt.plot(xzn, result, 'ro')
     plt.plot(xt, yt, 'bo')

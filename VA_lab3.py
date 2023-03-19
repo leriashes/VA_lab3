@@ -83,7 +83,22 @@ def Lagrange(table):
 
     return coef_Lagrange
 
-def Newton():
+def Newton(table, f):
+    #вычисление разностей
+    n = len(table)
+    
+    f.append([])
+    for i in range(n):
+        f[0].append(table[i][1])
+        
+
+    for i in range(1, n):
+        f.append([])
+        k = i
+        for j in range(n - i):
+            f[i].append((f[i - 1][j + 1] - f[i - 1][j])/(table[k][0] - table[j][0]))
+            k += 1
+    
     return
 
 def count_Lagrange(xs, coefs):
@@ -104,7 +119,8 @@ def count_Lagrange(xs, coefs):
 
     return ys
 
-def variant1(table):
+def variant1():
+    table = read_table()
     n = len(table)
     a = table[0][0]
     b = table[n - 1][0]
@@ -116,9 +132,6 @@ def variant1(table):
         if xzn >= a and xzn <= b:
             break
 
-
-    
-
     result = 0
 
     for i in range(n - 1):
@@ -127,7 +140,8 @@ def variant1(table):
                 a = (table[i + 1][1] - table[i][1]) / (table[i + 1][0] - table[i][0])
                 result = a * xzn + table[i][1] - a * table[i][0]
 
-    print('\nРезультат: ', result)
+    print('\nРезультат (линейная интерполяция): ', result)
+
 
     result = 0
 
@@ -142,7 +156,8 @@ def variant1(table):
                 znam *= table[i][0] - table[j][0]
         result += chisl / znam
 
-    print('\nРезультат: ', result, ' Количество итераций: ', count)
+    print('\n\nРезультат (полином Лагранжа): ', result)
+
 
     coef_Lagrange = Lagrange(table)
 
@@ -154,9 +169,45 @@ def variant1(table):
         result1 += coef_Lagrange[len(coef_Lagrange) - 2 - i]
         count += 1
 
-    print('\nРезультат: ', result1, ' Количество итераций: ', count)
+    print('\nРезультат (полином Лагранжа): ', result1)
 
-    return coef_Lagrange
+
+    f = []
+    Newton(table, f)
+
+    result = table[0][1]
+    s = []
+
+    for i in range(1, n):
+        s.append(f[i][0])
+
+    for i in range(n - 1):
+        r = xzn - table[i][0]
+
+        for j in range(n - 2, -1 + i, -1):
+            s[j] *= r
+
+    for i in range(n - 1):
+        result += s[i]
+
+    print('\n\nРезультат (полином Ньютона): ', result)
+
+
+    x = np.arange((4 * table[0][0] - table[len(table) -1][0]) / 5, (6 * table[len(table) - 1][0] + table[0][0]) / 5, 0.01)
+    plt.plot(x, count_Lagrange(x, coef_Lagrange))
+
+    xt = []
+    yt = []
+
+    for i in range(len(table)):
+        xt.append(table[i][0])
+        yt.append(table[i][1])
+
+    plt.plot(xzn, result, 'ro')
+    plt.plot(xt, yt, 'bo')
+    plt.grid(True)
+
+    return
 
 def variant2():
     print(2)
@@ -165,26 +216,10 @@ while True:
     print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')
     variant = input()
 
-    coefs = []
-
     print('\n')
     if len(variant) == 1 and (variant[0] == '1' or variant[0] == '2'):
         if variant == '1':
-            table = read_table()
-            coefs = variant1(table)
-
-            x = np.arange((4 * table[0][0] - table[len(table) -1][0]) / 5, (6 * table[len(table) - 1][0] + table[0][0]) / 5, 0.01)
-            plt.plot(x, count_Lagrange(x, coefs))
-
-            xt = []
-            yt = []
-
-            for i in range(len(table)):
-                xt.append(table[i][0])
-                yt.append(table[i][1])
-
-            plt.plot(xt, yt, 'bo')
-            plt.grid(True)
+            variant1()
         else:
             variant2()
         break

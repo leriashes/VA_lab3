@@ -98,6 +98,23 @@ def Newton(table, f):
         for j in range(n - i):
             f[i].append((f[i - 1][j + 1] - f[i - 1][j])/(table[k][0] - table[j][0]))
             k += 1
+
+    print('\nПолином Ньютона: ', table[0][1], end='')
+
+    for i in range(n - 1):
+        print(' + ', end='')
+        for j in range(i + 1):
+            print('(x - ', end='')
+            if table[j][0] < 0:
+                print('(', table[j][0], ')', end='', sep='')
+            else:
+                print(table[j][0], end='')
+            print(') * ', end='')
+
+        if f[i + 1][0] < 0:
+            print('(', f[i + 1][0], ')', end='', sep='')
+        else:
+            print(f[i + 1][0], end='')
     
     return
 
@@ -117,7 +134,7 @@ def count_Lagrange(xs, coefs):
    # for i in range(order):
     #    ys += coefs[i] * xs ** i
 
-    return ys
+   return ys
 
 def variant1():
     table = read_table()

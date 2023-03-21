@@ -31,6 +31,21 @@ def read_table():
 
     return table
 
+def read_x():
+    spisok = []
+    xt = []
+
+    with open('fx.csv', 'r') as file:
+        i = 0
+        for line in file.readlines():
+            spisok.append(line[:line.find(';')])
+            xt.append(float(spisok[i]))
+            i += 1
+        
+    xt.sort()
+
+    return xt
+
 def Lagrange(table):
 
     n = len(table)
@@ -128,10 +143,6 @@ def count_Lagrange(xs, coefs):
     for i in range(order - 1):
         ys *= xs
         ys += coefs[order - 2 - i]
-
-   # ys = np.zeros(len(xs))  # Initialise an array of zeros of the required length.
-   # for i in range(order):
-    #    ys += coefs[i] * xs ** i
 
     return ys
 
@@ -253,7 +264,16 @@ def variant1():
     return
 
 def variant2():
-    print(2)
+    print('Введите функцию: y = ', end='')
+    func = input()
+
+    xt = read_x()
+    yt = []
+
+    for i in range(len(xt)):
+        x = xt[i]
+        yt.append(eval(func))
+        print('x = ', xt[i], '   y = ', yt[i], sep='')
 
 while True:
     print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')

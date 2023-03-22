@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import getch
 
 def read_table():
     spisok = []
@@ -183,6 +184,29 @@ def count_function(xs, func):
         ys.append(eval(func))
     return ys
 
+def count_razn(iy, fy):
+    razn = [[0, 0, 0]]
+    k = 0
+
+    for i in range(len(iy)):
+        r = fy[i] - iy[i]
+        if abs(r) > abs(razn[0][2]):
+            razn[0][2] = r
+            razn[0][0] = i
+            razn[0][1] = fy[i]
+
+    for i in range(len(iy)):
+        r = fy[i] - iy[i]
+        if abs(r) == abs(razn[0][2]) and i != razn[0][0]:
+            razn.append([])
+            k += 1
+            razn[k][2] = r
+            razn[k][0] = i
+            razn[k][1] = fy[i]
+
+    return razn
+
+
 def variant1():
     table = read_table()
     n = len(table)
@@ -264,12 +288,17 @@ def variant1():
         yt.append(table[i][1])
 
     x = np.arange(table[0][0], table[len(table) - 1][0], 0.001)
-    plt.plot(x, count_Lagrange(x, coef_Lagrange))
-    plt.plot(x, count_Newton(x, f, xt))
+    plt.plot(x, count_Lagrange(x, coef_Lagrange), 'y')
+    plt.plot(x, count_Newton(x, f, xt), 'g')
 
     plt.plot(xzn, result, 'ro')
     plt.plot(xt, yt, 'bo')
     plt.grid(True)
+
+    plt.xlabel(r'$x$', fontsize=14)
+    plt.ylabel(r'$y$', fontsize=14)
+
+    plt.show()
 
     return
 
@@ -297,40 +326,47 @@ def variant2():
         yt.append(table[i][1])
 
     x = np.arange(table[0][0], table[len(table) - 1][0], 0.001)
-    plt.plot(x, count_Lagrange(x, coef_Lagrange))
-    plt.plot(x, count_Newton(x, f, xt))
-    plt.plot(x, count_function(x, func))
+
+    ly = count_Lagrange(x, coef_Lagrange)
+    plt.plot(x, ly, 'y')
+    plt.plot(x, count_Newton(x, f, xt), 'g')
+    
+    fy = count_function(x, func)
+    plt.plot(x, fy, 'r', label=r'f(x)')
 
     plt.plot(xt, yt, 'bo')
     plt.grid(True)
+    plt.legend(loc='best', fontsize=12)
+
+    plt.xlabel(r'$x$', fontsize=14)
+    plt.ylabel(r'$y$', fontsize=14)
+
+    razn = count_razn(ly, fy)
+
+    for i in range(len(razn)):
+        razn[i][0] = table[0][0] + razn[i][0] * 0.001
+        plt.plot([razn[i][0], razn[i][0]], [razn[i][1], razn[i][1] - razn[i][2]], 'orange')
+
+    print('\nМаксимальное отклонение: ', abs(razn[0][2]))
+    plt.show()
+    return
 
     
-
 while True:
-    print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')
-    variant = input()
+    while True:
+        print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')
+        variant = input()
 
-    print('\n')
-    if len(variant) == 1 and (variant[0] == '1' or variant[0] == '2'):
-        if variant == '1':
-            variant1()
-        else:
-            variant2()
+        print('\n')
+        if len(variant) == 1 and (variant[0] == '1' or variant[0] == '2'):
+            if variant == '1':
+                variant1()
+            else:
+                variant2()
+            break
+    print('\n\nЧтобы продолжить нажмите Enter. Для выхода из программы нажмите любую другую клавишу. ', end='')
+    cont = getch.getch()
+    if cont == '\n':
+        print('\n\n')
+    else:
         break
-
-    
-
-x = np.arange(-9, 74, 0.01)
-"""plt.figure(figsize=(10, 5))
-#plt.plot(x, np.sin(x), label=r'$f_1(x)=\sin(x)$')
-#plt.plot(x, np.cos(x), label=r'$f_2(x)=\cos(x)$')
-#plt.plot(x, -x, label=r'$f_3(x)=-x$')
-c = np.poly1d([-10, 10, 15])
-
-
-plt.xlabel(r'$x$', fontsize=14)
-plt.ylabel(r'$f(x)$', fontsize=14)
-plt.grid(True)
-plt.legend(loc='best', fontsize=12)
-plt.savefig('figure_with_legend.png')"""
-plt.show()

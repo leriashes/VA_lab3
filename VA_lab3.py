@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 def read_table():
     spisok = []
@@ -39,7 +40,8 @@ def read_x():
         i = 0
         for line in file.readlines():
             spisok.append(line[:line.find(';')])
-            xt.append(float(spisok[i]))
+            xt.append([])
+            xt[i].append(float(spisok[i]))
             i += 1
         
     xt.sort()
@@ -173,6 +175,14 @@ def count_Newton(xs, f, table):
 
     return ys
 
+def count_function(xs, func):
+    ys = []
+
+    for i in range(len(xs)):
+        x = xs[i]
+        ys.append(eval(func))
+    return ys
+
 def variant1():
     table = read_table()
     n = len(table)
@@ -253,7 +263,7 @@ def variant1():
         xt.append(table[i][0])
         yt.append(table[i][1])
 
-    x = np.arange((4 * table[0][0] - table[len(table) -1][0]) / 5, (6 * table[len(table) - 1][0] + table[0][0]) / 5, 0.01)
+    x = np.arange(table[0][0], table[len(table) - 1][0], 0.001)
     plt.plot(x, count_Lagrange(x, coef_Lagrange))
     plt.plot(x, count_Newton(x, f, xt))
 
@@ -267,13 +277,34 @@ def variant2():
     print('Введите функцию: y = ', end='')
     func = input()
 
-    xt = read_x()
+    table = read_x()
+
+    for i in range(len(table)):
+        x = table[i][0]
+        table[i].append(eval(func))
+        print('x = ', table[i][0], '   y = ', table[i][1], sep='')
+
+    coef_Lagrange = Lagrange(table)
+
+    f = []
+    Newton(table, f)
+
+    xt = []
     yt = []
 
-    for i in range(len(xt)):
-        x = xt[i]
-        yt.append(eval(func))
-        print('x = ', xt[i], '   y = ', yt[i], sep='')
+    for i in range(len(table)):
+        xt.append(table[i][0])
+        yt.append(table[i][1])
+
+    x = np.arange(table[0][0], table[len(table) - 1][0], 0.001)
+    plt.plot(x, count_Lagrange(x, coef_Lagrange))
+    plt.plot(x, count_Newton(x, f, xt))
+    plt.plot(x, count_function(x, func))
+
+    plt.plot(xt, yt, 'bo')
+    plt.grid(True)
+
+    
 
 while True:
     print('Режимы работы:\n1 - по заданной таблице значений определить \n    приближённое значение функции в точке\n2 - по заданной аналитически функции y = f(x) и массиву значений аргумента \n    вычислить таблицу значений функции\n\nВыберите режим работы программы: ', end='')

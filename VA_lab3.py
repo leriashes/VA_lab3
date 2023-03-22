@@ -200,9 +200,9 @@ def count_razn(iy, fy):
         if abs(r) == abs(razn[0][2]) and i != razn[0][0]:
             razn.append([])
             k += 1
-            razn[k][2] = r
-            razn[k][0] = i
-            razn[k][1] = fy[i]
+            razn[k].append(i)
+            razn[k].append(fy[i])
+            razn[k].append(r)
 
     return razn
 

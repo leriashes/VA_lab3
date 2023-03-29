@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import math
 import getch
 
+#чтение таблицы из файла
 def read_table():
     spisok = []
     table = []
@@ -33,6 +34,7 @@ def read_table():
 
     return table
 
+#чтение иксов из файла
 def read_x():
     spisok = []
     xt = []
@@ -49,12 +51,13 @@ def read_x():
 
     return xt
 
+#интерполяционный полином Лагранжа
 def Lagrange(table):
 
     n = len(table)
     coef_Lagrange = []
 
-
+    #вычисление коэффициентов
     for i in range(n):
         coef1 = []
         coef = []
@@ -92,6 +95,7 @@ def Lagrange(table):
             for j in range(len(coef)):
                 coef_Lagrange[j] += coef[j]
 
+    #вывод полинома
     print('\nПолином Лагранжа: ', end='')
 
     for i in range(n - 1):
@@ -101,7 +105,9 @@ def Lagrange(table):
 
     return coef_Lagrange
 
+#интерполяционный полином Ньютона
 def Newton(table, f):
+
     #вычисление разностей
     n = len(table)
     
@@ -117,6 +123,7 @@ def Newton(table, f):
             f[i].append((f[i - 1][j + 1] - f[i - 1][j])/(table[k][0] - table[j][0]))
             k += 1
 
+    #вывод полинома
     print('\nПолином Ньютона: ', table[0][1], end='')
 
     for i in range(n - 1):
@@ -136,6 +143,7 @@ def Newton(table, f):
     
     return
 
+#вычисление результатов путём подстановки в полином Лагранжа
 def count_Lagrange(xs, coefs):
     order = len(coefs)
 
@@ -149,6 +157,7 @@ def count_Lagrange(xs, coefs):
 
     return ys
 
+#вычисление результатов путём подстановки в полином Ньютона
 def count_Newton(xs, f, table):
 
     ys = np.zeros(len(xs))
@@ -176,6 +185,7 @@ def count_Newton(xs, f, table):
 
     return ys
 
+#вычисление значений функции
 def count_function(xs, func):
     ys = []
 
@@ -184,6 +194,7 @@ def count_function(xs, func):
         ys.append(eval(func))
     return ys
 
+#поиск максимального отклонения
 def count_razn(iy, fy):
     razn = [[0, 0, 0]]
     k = 0
@@ -206,7 +217,7 @@ def count_razn(iy, fy):
 
     return razn
 
-
+#первый вариант работы программы
 def variant1():
     table = read_table()
     n = len(table)
@@ -302,6 +313,7 @@ def variant1():
 
     return
 
+#второй вариант работы прораммы
 def variant2():
     print('Введите функцию: y = ', end='')
     func = input()
@@ -347,7 +359,7 @@ def variant2():
         razn[i][0] = table[0][0] + razn[i][0] * 0.001
         plt.plot([razn[i][0], razn[i][0]], [razn[i][1], razn[i][1] - razn[i][2]], 'orange')
 
-    print('\nМаксимальное отклонение: ', abs(razn[0][2]))
+    print('\n\nМаксимальное отклонение: ', abs(razn[0][2]))
     plt.show()
     return
 
@@ -366,7 +378,8 @@ while True:
             break
     print('\n\nЧтобы продолжить нажмите Enter. Для выхода из программы нажмите любую другую клавишу. ', end='')
     cont = getch.getch()
-    if cont == '\n':
+   
+    if cont == '\n' or cont == b'\r':
         print('\n\n')
     else:
         break
